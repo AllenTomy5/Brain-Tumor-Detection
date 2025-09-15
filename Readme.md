@@ -168,3 +168,14 @@ The CNN model is implemented in [`Brain_tumor_detection_CNN.ipynb`](Brain_tumor_
 - The web app stores uploaded images temporarily in `brain_tumor_webapp/static/uploads/`.
 
 ---
+## Tech Stack
+
+- **Python 3**: Core programming language for model development and backend.
+- **TensorFlow / Keras**: Deep learning framework for building and training the CNN model.
+- **NumPy**: Numerical operations and data manipulation.
+- **Matplotlib & Seaborn**: Data visualization and plotting in notebooks.
+- **Pillow**: Image processing and manipulation.
+- **Flask**: Lightweight web framework for serving the web application.
+- **Werkzeug**: WSGI utility library used by Flask.
+- **Jupyter Notebook**: Interactive development and experimentation environment.
+- **HTML/CSS/JavaScript**: Frontend for the web application (with custom dark mode styling).
