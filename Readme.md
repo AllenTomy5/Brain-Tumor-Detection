@@ -1,5 +1,42 @@
 # Brain Tumor Detection with CNN
 
+**This project was created for the Hack O Spider Hackathon, under the track Artificial Intelligence and Machine Learning.**
+
+---
+
+## Problem Statement
+
+Early and accurate detection of brain tumors from MRI scans is a critical challenge in healthcare. Manual analysis by radiologists is time-consuming, subject to human error, and often inaccessible in remote or resource-limited settings. There is a pressing need for automated, reliable, and accessible tools that can assist medical professionals in diagnosing brain tumors quickly and accurately, thereby improving patient outcomes and reducing diagnostic delays.
+
+---
+
+## Solution Overview
+
+This project addresses the problem by providing an end-to-end Convolutional Neural Network (CNN) based solution for brain tumor detection from MRI images. The solution includes:
+
+- A robust CNN model trained on a labeled MRI dataset to distinguish between tumor and non-tumor images.
+- A user-friendly web application that allows users (doctors, technicians, or patients) to upload MRI images and receive instant predictions, confidence scores, and actionable recommendations.
+- Visualizations and statistics to support clinical decision-making.
+
+By automating the detection process, this solution reduces the workload on radiologists, minimizes diagnostic errors, and makes advanced diagnostic support accessible even in under-resourced areas.
+
+---
+
+## Market Scope
+
+The global brain tumor diagnosis and treatment market is rapidly growing, driven by increasing incidence rates and advancements in medical imaging. Automated AI-powered diagnostic tools like this project have significant market potential:
+
+- **Hospitals and Diagnostic Centers:** Can integrate this tool to assist radiologists, reduce turnaround time, and improve diagnostic accuracy.
+- **Telemedicine Platforms:** Enables remote diagnosis and second opinions, expanding access to expert care.
+- **Emerging Markets:** Provides affordable and scalable diagnostic support where specialist availability is limited.
+- **Research and Education:** Useful for training medical students and supporting research in neuro-oncology and medical imaging.
+
+With the rise of AI in healthcare, solutions like this are poised to become essential components of modern diagnostic workflows, improving patient care and operational efficiency.
+
+---
+
+# Brain Tumor Detection with CNN
+
 This project provides a Convolutional Neural Network (CNN) model for brain tumor detection from MRI images, along with a web application for easy usage.
 
 ---
