@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brain Tumor Detection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #181c24;
+            color: #f2f2f2;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #232837;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 32px 32px 24px 32px;
+        }
+        h1 {
+            color: #7ed957;
+            margin-bottom: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .upload-form {
+            margin: 0 auto;
+        }
+        .drag-area {
+            border: 2px dashed #7ed957;
+            padding: 28px;
+            cursor: pointer;
+            border-radius: 10px;
+            background: #232837;
+            transition: border-color 0.2s;
+        }
+        .drag-area.hover {
+            border-color: #f2f2f2;
+        }
+        #preview {
+            margin-top: 18px;
+            max-width: 100%;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 2px 8px rgba(126,217,87,0.15);
+        }
+        input[type="submit"] {
+            margin-top: 24px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 18px;
+            background: linear-gradient(90deg, #7ed957 0%, #4e9f3d 100%);
+            color: #181c24;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="submit"]:hover {
+            background: linear-gradient(90deg, #4e9f3d 0%, #7ed957 100%);
+        }
+        .result-section {
+            margin-top: 32px;
+            background: #232837;
+            border-radius: 10px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 8px rgba(126,217,87,0.10);
+        }
+        .result-section h3 {
+            margin-top: 0;
+            color: #7ed957;
+            font-size: 1.3em;
+        }
+        .confidence {
+            font-size: 1.1em;
+            margin: 10px 0 0 0;
+            color: #f2f2f2;
+        }
+        .mitigations {
+            margin-top: 18px;
+            background: #1a1e29;
+            border-left: 4px solid #e57373;
+            padding: 16px;
+            border-radius: 8px;
+            color: #ffbdbd;
+        }
+        .stats-table {
+            width: 100%;
+            margin-top: 12px;
+            border-collapse: collapse;
+        }
+        .stats-table td {
+            padding: 6px 0;
+            color: #b0b8c1;
+        }
+        .stats-table .label {
+            color: #7ed957;
+            font-weight: 500;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Brain Tumor Detection</h1>
+        <div class="upload-form">
+            <form method="post" enctype="multipart/form-data">
+                <div class="drag-area" id="drag-area">
+                    <p>Drag & Drop or Click to Upload Image</p>
+                    <input type="file" name="file" id="fileInput" style="display: none;" accept="image/*" required>
+                </div>
+                <img id="preview" alt="Image Preview" style="margin-top: 18px; max-width: 100%; border-radius: 8px; display: none; box-shadow: 0 2px 8px rgba(126,217,87,0.15);">
+                <input type="submit" value="Predict">
+            </form>
+            {% if image_url %}
+            <img src="{{ image_url }}" alt="Uploaded Image" style="margin-top: 18px; max-width: 320px; border-radius: 8px; box-shadow: 0 2px 8px rgba(126,217,87,0.10);">
+            {% endif %}
+        </div>
+        {% if prediction %}
+        <div class="result-section">
+            <h3>Prediction: {{ prediction }}</h3>
+            <table class="stats-table">
+                <tr>
+                    <td class="label">Confidence Score:</td>
+                    <td>{{ confidence_score }}%</td>
+                </tr>
+                <tr>
+                    <td class="label">Raw Model Output:</td>
+                    <td>{{ raw_output }}</td>
+                </tr>
+            </table>
+            {% if prediction == "Tumor detected!" %}
+            <div class="mitigations">
+                <strong>Recommended Mitigations:</strong>
+                <ul>
+                    <li>Consult a neurologist or oncologist as soon as possible.</li>
+                    <li>Schedule advanced imaging (MRI/CT) for confirmation.</li>
+                    <li>Follow up with prescribed medical tests and biopsies.</li>
+                    <li>Discuss treatment options (surgery, radiation, chemotherapy) with your doctor.</li>
+                    <li>Maintain a healthy lifestyle and seek support from family and professionals.</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+        const dragArea = document.getElementById('drag-area');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+
+        dragArea.addEventListener('click', () => fileInput.click());
+
+        dragArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragArea.classList.add('hover');
+        });
+
+        dragArea.addEventListener('dragleave', () => {
+            dragArea.classList.remove('hover');
+        });
+
+        dragArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragArea.classList.remove('hover');
+            const file = e.dataTransfer.files[0];
+            fileInput.files = e.dataTransfer.files;
+            showPreview(file);
+        });
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            showPreview(file);
+        });
+
+        function showPreview(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        // Hide preview if server-side image is shown
+        var hasServerImage = "{{ 'true' if image_url else 'false' }}";
+        if (hasServerImage === 'true') {
+            preview.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
